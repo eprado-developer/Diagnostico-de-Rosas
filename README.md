@@ -1,3 +1,6 @@
+
+# EDWIN PRADO & DANA HUACA
+
 # 🌳🌹 Explorador Dinámico de Árboles con IA (Ollama + Streamlit)
 
 Aplicación interactiva desarrollada en Python para la materia **Estructuras de Datos No Lineales** (Colegio Mayor del Cauca). Permite navegar jerárquicamente por un árbol paso a paso. Incluye dos árboles: **Estructuras de Datos No Lineales** y el nuevo **Diagnóstico de Rosas** (basado en `docs/Diagrama_de_arbol.jpeg`). En **cada pregunta** del árbol, un modelo de lenguaje local (**Ollama**) responde exactamente esa pregunta; en la hoja final explica el diagnóstico o concepto en tiempo real.

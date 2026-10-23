@@ -1,0 +1,182 @@
+{
+  "valor": "Diagnóstico de Rosas",
+  "pregunta": "¿Qué tipo de rosa tienes?",
+  "dominio": "diagnostico_rosas",
+  "hijos": [
+    {
+      "valor": "Rosales de Té / Corte",
+      "pregunta": "Parte afectada?",
+      "hijos": [
+        {
+          "valor": "Suelo y Raíz",
+          "pregunta": "¿Suelo encharcado y marcha?",
+          "hijos": [
+            {
+              "valor": "Sí",
+              "diagnostico": "Pudrición Radicular",
+              "accion": "Mejorar drenaje + Oomiceticida"
+            }
+          ]
+        },
+        {
+          "valor": "Botones Florales",
+          "pregunta": "¿Presenta moho velloso/gris?",
+          "hijos": [
+            {
+              "valor": "Sí",
+              "diagnostico": "Botritis en flor",
+              "accion": "Eliminar flor + Reducir humedad"
+            },
+            {
+              "valor": "No, rasgaduras plateadas",
+              "diagnostico": "Trips",
+              "accion": "Trampas cromáticas + Insecticida"
+            }
+          ]
+        },
+        {
+          "valor": "Hojas y Tallos",
+          "pregunta": "¿Tiene plaga o manchas?",
+          "hijos": [
+            {
+              "valor": "Polvo blanco harinoso",
+              "diagnostico": "Oídio",
+              "accion": "Fungicida sistémico / Azufre"
+            },
+            {
+              "valor": "Chancros / Manchas oscuras",
+              "diagnostico": "Chancro / Botritis",
+              "accion": "Podar bajo zona infectada + Fungicida"
+            },
+            {
+              "valor": "Insectos visibles",
+              "diagnostico": "Pulgón",
+              "accion": "Jabón potásico / Control biológico",
+              "pregunta_confirmacion": "¿Pequeños verdes/negros en brotes?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "valor": "Rosales Arbustivos / Paisajísticos",
+      "pregunta": "Parte afectada?",
+      "hijos": [
+        {
+          "valor": "Botones Florales",
+          "pregunta": "¿Deformación por plaga?",
+          "hijos": [
+            {
+              "valor": "Sí",
+              "diagnostico": "Pulgón",
+              "accion": "Jabón potásico / Control biológico",
+              "pregunta_confirmacion": "¿Pequeños verdes/negros en brotes?"
+            }
+          ]
+        },
+        {
+          "valor": "Hojas y Tallos",
+          "pregunta": "¿Síntomas visuales?",
+          "hijos": [
+            {
+              "valor": "Agujeros / Mordeduras",
+              "diagnostico": "Orugas / Gusanos",
+              "accion": "Bacillus thuringiensis / Retiro manual"
+            },
+            {
+              "valor": "Pústulas naranja/marrón en envés",
+              "diagnostico": "Roya",
+              "accion": "Fungicida sistémico / Variedades resistentes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "valor": "Rosales Trepadores",
+      "pregunta": "Parte afectada?",
+      "hijos": [
+        {
+          "valor": "Hojas y Tallos",
+          "pregunta": "¿Manchas en superficie?",
+          "hijos": [
+            {
+              "valor": "Manchas negras circulares con halo amarillo",
+              "diagnostico": "Mancha Negra",
+              "accion": "Fungicida a base de Cobre / Limpieza de hojas"
+            },
+            {
+              "valor": "No hay manchas",
+              "pregunta": "¿Alteración de color / insectos?",
+              "hijos": [
+                {
+                  "valor": "Bordes marrones / quemados",
+                  "diagnostico": "Deficiencia de Potasio",
+                  "accion": "Aporte de Fertilizante K"
+                },
+                {
+                  "valor": "Hojas amarillas uniformes",
+                  "diagnostico": "Deficiencia de Nitrógeno",
+                  "accion": "Fertilizante rico en N"
+                },
+                {
+                  "valor": "Puntos amarillos + micro-telarañas",
+                  "diagnostico": "Araña Roja",
+                  "accion": "Acaricida + Elevar humedad"
+                },
+                {
+                  "valor": "Hojas amarillas, venas verdes",
+                  "diagnostico": "Clorosis Férrica",
+                  "accion": "Quelato de Hierro + Ajustar pH"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "valor": "Rosales Miniatura / Maceta",
+      "pregunta": "Parte afectada?",
+      "hijos": [
+        {
+          "valor": "Hojas y Tallos",
+          "pregunta": "¿Alteración de color / insectos?",
+          "hijos": [
+            {
+              "valor": "Bordes marrones / quemados",
+              "diagnostico": "Deficiencia de Potasio",
+              "accion": "Aporte de Fertilizante K"
+            },
+            {
+              "valor": "Hojas amarillas uniformes",
+              "diagnostico": "Deficiencia de Nitrógeno",
+              "accion": "Fertilizante rico en N"
+            },
+            {
+              "valor": "Puntos amarillos + micro-telarañas",
+              "diagnostico": "Araña Roja",
+              "accion": "Acaricida + Elevar humedad"
+            },
+            {
+              "valor": "Hojas amarillas, venas verdes",
+              "diagnostico": "Clorosis Férrica",
+              "accion": "Quelato de Hierro + Ajustar pH"
+            }
+          ]
+        },
+        {
+          "valor": "Suelo y Raíz",
+          "pregunta": "¿Compactación o exceso de riego?",
+          "hijos": [
+            {
+              "valor": "Sí",
+              "diagnostico": "Asfixia Radicular / Estrés Hídrico",
+              "accion": "Trasplantar a sustrato poroso"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

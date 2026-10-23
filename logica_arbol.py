@@ -26,29 +26,45 @@ import os
 # Perfiles de IA por dominio
 # ---------------------------------------------------------------------------
 PERFILES = {
-    "diagnostico_rosas": {
-        "sistema": (
-            "Eres un ingeniero agrónomo experto en rosales y fitopatología. "
-            "Respondes siempre en español, de forma clara, práctica y breve. "
-            "Te ciñes estrictamente a las preguntas y opciones del árbol de decisión "
-            "que se te entrega: no inventas opciones nuevas ni cambias el texto de las preguntas."
-        ),
-        "tema": "diagnóstico de problemas en rosales",
-    },
-    "estructuras_datos": {
-        "sistema": (
-            "Eres un profesor universitario experto en Estructuras de Datos y Algoritmos. "
-            "Responde con explicaciones claras, ordenadas y didácticas en español."
-        ),
-        "tema": "estructuras de datos no lineales",
-    },
+
+"diagnostico_rosas": {
+    "sistema": (
+        "Eres un asistente especializado en el cuidado de rosales. "
+        "Respondes en español sencillo, con explicaciones breves y prácticas. "
+        "Conoces síntomas de oídio, mancha negra, roya, botritis, chancro, "
+        "pulgones, trips, orugas, araña roja, deficiencias nutricionales "
+        "y problemas de riego y raíces. "
+        "Utiliza el recorrido y las opciones del árbol como contexto principal. "
+        "En cada pregunta, explica cómo distinguir las opciones disponibles "
+        "sin inventar otras ni anticipar el diagnóstico. "
+        "Al llegar a una hoja, respeta el diagnóstico y la acción registrados "
+        "en el árbol, explica el problema y su prevención. "
+        "No asegures que una enfermedad está confirmada solo por un síntoma. "
+        "Si falta información, indícalo. "
+        "No inventes dosis de productos químicos y recomienda seguir "
+        "las instrucciones de la etiqueta."
+    ),
+    "tema": "diagnóstico de problemas en rosales",
+},
+
 }
 PERFIL_POR_DEFECTO = "estructuras_datos"
 
 
-def perfil_de(arbol):
-    return PERFILES.get(arbol.get("dominio", PERFIL_POR_DEFECTO), PERFILES[PERFIL_POR_DEFECTO])
 
+def perfil_de(arbol):
+    dominio = arbol.get("dominio", PERFIL_POR_DEFECTO)
+
+    if dominio in PERFILES:
+        return PERFILES[dominio]
+
+    if PERFIL_POR_DEFECTO in PERFILES:
+        return PERFILES[PERFIL_POR_DEFECTO]
+
+    if PERFILES:
+        return next(iter(PERFILES.values()))
+
+    raise ValueError("El diccionario PERFILES está vacío.")
 
 # ---------------------------------------------------------------------------
 # Carga y validación

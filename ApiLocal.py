@@ -7,7 +7,7 @@ from logica_arbol import (
     prompt_pregunta, prompt_hoja, respuesta_offline_pregunta, respuesta_offline_hoja,
 )
 
-MODELO = "llama3.2:1b"
+MODELO = "rosas-experto"
 ARBOLES = {"1": ("Diagnóstico de Rosas", "DiagnosticoRosas.json"),
            "2": ("Estructuras de Datos No Lineales", "EstructurasDeDatos.json")}
 

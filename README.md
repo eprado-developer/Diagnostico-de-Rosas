@@ -1,139 +1,60 @@
+# 🌹 Rosal · Diagnóstico de rosas con IA local
 
-# EDWIN PRADO & DANA HUACA
+**Edwin Prado & Dana Huaca** · Estructuras de Datos No Lineales · Colegio Mayor del Cauca
 
-# 🌳🌹 Explorador Dinámico de Árboles con IA (Ollama + Streamlit)
+App en Streamlit que recorre un árbol de decisión (`DiagnosticoRosas.json`, basado en `docs/Diagrama_de_arbol.jpeg`) y apoya cada paso con una IA local (Ollama) **limitada exclusivamente al mundo de las rosas**.
 
-Aplicación interactiva desarrollada en Python para la materia **Estructuras de Datos No Lineales** (Colegio Mayor del Cauca). Permite navegar jerárquicamente por un árbol paso a paso. Incluye dos árboles: **Estructuras de Datos No Lineales** y el nuevo **Diagnóstico de Rosas** (basado en `docs/Diagrama_de_arbol.jpeg`). En **cada pregunta** del árbol, un modelo de lenguaje local (**Ollama**) responde exactamente esa pregunta; en la hoja final explica el diagnóstico o concepto en tiempo real.
+## Puesta en marcha
 
----
+```bash
+pip install -r requirements.txt
 
-## 🚀 Puesta en Marcha Rápida
+# 1) Crear el modelo especializado (una vez, y cada vez que edites el conocimiento)
+python generar_modelfile.py
+ollama create rosas-experto -f Modelfile
 
-### 1. Requisitos Previos
-* **Python 3.10+** (si no tienes el entorno `.venv-1`, crea uno e instala `pip install -r requirements.txt`).
-* **Ollama**: Descargado e instalado desde [ollama.com](https://ollama.com/).
-* Modelo local de Ollama descargado (por defecto: `llama3.2:1b`):
-  ```bash
-  ollama run llama3.2:1b
-  ```
-
----
-
-### 2. Ejecutar la Aplicación
-
-Abre una terminal (PowerShell o CMD) en la carpeta del proyecto y ejecuta:
-
-```powershell
-.\.venv-1\Scripts\streamlit.exe run app.py
+# 2) Ejecutar
+streamlit run app.py
 ```
 
-> **Nota:** Si tienes el entorno virtual activado, también puedes ejecutar simplemente:
-> ```bash
-> streamlit run app.py
-> ```
+Sin Ollama la app funciona igual: muestra la ficha técnica y las pistas de cada opción; la IA solo añade una explicación personalizada.
 
----
+## Estructura
 
-### 3. Acceder al Entorno Gráfico
+| Archivo | Para qué sirve |
+| :-- | :-- |
+| `app.py` | Interfaz minimalista (una pregunta por pantalla, progreso, ficha del diagnóstico). |
+| `conocimiento_rosas.py` | **Fuente única de conocimiento**: fichas de los 14 diagnósticos, pistas de cada opción, fuentes y *system prompt*. |
+| `logica_arbol.py` | Carga/validación del árbol, prompts (inyectan la ficha técnica) y respuestas sin IA. |
+| `generar_modelfile.py` | Genera el `Modelfile` desde `conocimiento_rosas.py` para que app y modelo no se desincronicen. |
+| `Modelfile` | Generado: parámetros, system prompt con base de conocimiento y ejemplos (incluye rechazo de temas ajenos). |
+| `DiagnosticoRosas.json` | El árbol. |
+| `ApiLocal.py` | Versión de consola. |
+| `.streamlit/config.toml` | Tema de colores. |
 
-Una vez ejecutado el comando anterior, la consola mostrará la URL local. Abre tu navegador web favorito (Chrome, Edge, Firefox, etc.) e ingresa a:
+## Cómo se mantiene la IA enfocada en rosas
 
-👉 **[http://localhost:8501/](http://localhost:8501/)**
+1. **System prompt con ámbito obligatorio**: ante cualquier tema ajeno responde una frase fija y vuelve al diagnóstico.
+2. **Ejemplos (few-shot) en el Modelfile**: un caso correcto y dos intentos fuera de tema.
+3. **Ficha técnica inyectada en cada prompt**: el modelo de 1B se apoya en datos curados, no solo en su memoria.
+4. **El árbol manda**: la IA no cambia el diagnóstico ni la acción, no inventa dosis y distingue síntoma de diagnóstico confirmado.
+5. **Parámetros estables**: temperatura 0.2, `repeat_penalty` 1.15, contexto 4096.
 
----
+> Con un modelo de 1B el enfoque es robusto pero no infalible. Para más precisión, cambia `BASE` en `generar_modelfile.py` a un modelo mayor (p. ej. `llama3.2:3b`).
 
-## 🌹 Árbol de Diagnóstico de Rosas
+## Ampliar el conocimiento
 
-Archivo: **`DiagnosticoRosas.json`** (transcripción fiel del diagrama `docs/Diagrama_de_arbol.jpeg`).
+1. Edita `FICHAS`, `PISTAS` o `FUENTES` en `conocimiento_rosas.py`.
+2. `python generar_modelfile.py && ollama create rosas-experto -f Modelfile`
+3. En la app: **Ajustes → Recargar JSON**. El panel avisa si un diagnóstico del árbol no tiene ficha.
 
-* **Raíz**: `¿Qué tipo de rosa tienes?` → Rosales de Té / Corte, Arbustivos / Paisajísticos, Trepadores, Miniatura / Maceta.
-* **Preguntas del árbol** (texto exacto del diagrama): `Parte afectada?`, `¿Suelo encharcado y marcha?`, `¿Presenta moho velloso/gris?`, `¿Tiene plaga o manchas?`, `¿Pequeños verdes/negros en brotes?`, `¿Deformación por plaga?`, `¿Síntomas visuales?`, `¿Manchas en superficie?`, `¿Alteración de color / insectos?`, `¿Compactación o exceso de riego?`.
-* **14 diagnósticos** (Pudrición Radicular, Botritis en flor, Trips, Oídio, Chancro / Botritis, Pulgón, Orugas / Gusanos, Roya, Mancha Negra, Deficiencia de Potasio, Deficiencia de Nitrógeno, Araña Roja, Clorosis Férrica, Asfixia Radicular / Estrés Hídrico), cada uno con su **acción** recomendada.
-* Los nodos compartidos del diagrama (*Pulgón* y *¿Alteración de color / insectos?*) están repetidos en cada rama donde aparecen.
+## Fuentes
 
-### ¿Cómo responde la IA?
+- UC IPM (Univ. de California) · *Roses: Diseases and Abiotic Disorders*, Pest Notes 7463: https://ipm.ucanr.edu/home-and-landscape/roses-diseases-and-abiotic-disorders/
+- UC IPM · Black spot: https://ipm.ucanr.edu/PMG/GARDEN/PLANTS/DISEASES/blackspot.html
+- UC IPM · Rosa spp., Floriculture and Ornamental Nurseries: https://ipm.ucanr.edu/agriculture/floriculture-and-ornamental-nurseries/rose
+- APS · Diseases of Roses: https://www.apsnet.org/edcenter/apsnetfeatures/Pages/Roses.aspx
+- UC Master Gardeners (Ventura): https://ucanr.edu/node/131269
+- ICA Colombia (registro de plaguicidas): https://www.ica.gov.co
 
-1. **En cada pregunta**: la IA recibe el texto exacto de la pregunta, las opciones del árbol y las respuestas ya dadas; explica qué se pregunta y cómo distinguir cada opción (sin inventar opciones ni diagnosticar antes de tiempo). Se puede desactivar el modo automático en la barra lateral para usar un botón **`🤖 Preguntarle a la IA`**.
-2. **En la hoja (diagnóstico)**: se muestra el diagnóstico y la acción **tal como están en el árbol** y la IA explica qué es, cómo aplicar la acción y cómo prevenirlo.
-3. **Modo offline**: si Ollama no está activo, el botón de prueba muestra la información tomada directamente del árbol.
-
----
-
-## 🧠 ¿Cómo Funciona la Aplicación?
-
-1. **Navegación Paso a Paso**:
-   * No satura la pantalla con todo el diagrama. En su lugar, muestra **una pregunta por pantalla** correspondiente al nivel actual.
-   * Cada opción muestra un icono de carpeta (`📁`) si tiene más subcategorías o de documento (`📄`) si es un concepto final.
-
-2. **Ruta Actual (Miga de pan / Breadcrumb)**:
-   * En la parte superior siempre visualizas el camino recorrido (ejemplo: `Estructuras de Datos No Lineales ➔ Arboles ➔ Recorridos ➔ InOrden`).
-
-3. **Explicación con IA en el Último Nivel**:
-   * Al seleccionar un nodo hoja (sin más hijos), la app genera automáticamente un prompt contextual y consulta a Ollama con efecto de escritura en vivo (*streaming*).
-
-4. **Controles de Navegación**:
-   * **`⬅️ Paso anterior`**: Retrocede un nivel en la jerarquía.
-   * **`🔄 Desde el inicio`**: Regresa a la raíz del árbol.
-   * **`🔄 Regenerar respuesta`**: Solicita una nueva explicación a la IA.
-
----
-
-## ⚡ Modificar el Árbol Dinámicamente (`EstructurasDeDatos.json`)
-
-El programa **no tiene rutas fijas en el código Python**; lee y construye las preguntas directamente del archivo `EstructurasDeDatos.json`.
-
-### Estructura de un Nodo:
-```json
-{
-  "valor": "Nombre de la categoría o concepto",
-  "pregunta": "¿Pregunta que se formula en este nodo?",
-  "hijos": [
-    {
-      "valor": "Subtema 1"
-    },
-    {
-      "valor": "Subtema 2",
-      "hijos": [ ... ]
-    }
-  ]
-}
-```
-
-* `valor`: la **opción** con la que se llega al nodo (lo que el usuario pulsó).
-* `pregunta`: la **pregunta** que se hace en el nodo; sus `hijos` son las opciones de respuesta.
-* Hojas de diagnóstico: `diagnostico`, `accion` y, opcionalmente, `pregunta_confirmacion`.
-* Raíz: `dominio` (`diagnostico_rosas` o `estructuras_datos`) elige el perfil de la IA en `logica_arbol.py`.
-
-### ¿Cómo agregar nuevas ramas?
-1. Abre `DiagnosticoRosas.json` o `EstructurasDeDatos.json` y agrega o modifica cualquier categoría (por ejemplo, añadir *Árboles AVL*, *Árboles B*, *Colas de Prioridad*, etc.).
-2. Guarda el archivo `.json`.
-3. En la barra lateral de la aplicación web, haz clic en **`🔄 Recargar JSON`**.
-4. ¡Listo! La nueva opción y sus preguntas aparecerán de inmediato en el menú sin reiniciar el servidor.
-
----
-
-## ⚠️ Consideraciones Importantes
-
-* **Servicio de Ollama Activo**: Para que la IA responda, el servicio de Ollama debe estar en ejecución en tu equipo. Si la aplicación muestra un error de conexión:
-  1. Abre una terminal y ejecuta `ollama serve` (o asegúrate de que la app de Ollama esté abierta en la barra de tareas de Windows).
-  2. Haz clic en el botón **`🔄 Reintentar conexión con Ollama`** en la página web.
-* **Modo Demostrativo Offline**: Si vas a exponer el proyecto en un equipo donde no esté instalado Ollama o no haya recursos suficientes, la aplicación incluye un botón:  
-  **`💡 Ver explicación de prueba (Modo Offline)`**, el cual genera una respuesta didáctica simulada para que la presentación nunca falle.
-* **Cambio de Modelo**: En la barra lateral puedes cambiar el modelo de Ollama en cualquier momento (ej: `llama3`, `mistral`, `gemma:2b`, etc.) y regular la creatividad con el deslizador de *Temperatura*.
-
----
-
-## 📁 Estructura de Archivos del Proyecto
-
-| Archivo | Descripción |
-| :--- | :--- |
-| **`app.py`** | Interfaz gráfica interactiva y dinámica desarrollada en Streamlit. |
-| **`logica_arbol.py`** | Lógica sin interfaz: carga del JSON, prompts de la IA y respuestas offline. |
-| **`DiagnosticoRosas.json`** | 🌹 Árbol de diagnóstico de rosas (según el diagrama). |
-| **`EstructurasDeDatos.json`** | Árbol original de Estructuras de Datos No Lineales. |
-| **`docs/Diagrama_de_arbol.jpeg`** | Diagrama de origen del árbol de rosas. |
-| **`requirements.txt`** | Dependencias (`streamlit`, `ollama`). |
-| **`ApiLocal.py`** | Versión de consola: elige árbol y la IA responde cada pregunta. |
-| **`ApiLLM.py`** | Script base de prueba para la librería de Ollama. |
-| **`.venv-1/`** | *(No incluido en este zip por su tamaño.)* Usa tu entorno existente o crea uno nuevo con `pip install -r requirements.txt`. |
-| **`README.md`** | Guía de uso, consideraciones y documentación técnica del proyecto. |
+Las fichas son una síntesis orientativa; no sustituyen a un ingeniero agrónomo.

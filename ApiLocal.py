@@ -8,8 +8,7 @@ from logica_arbol import (
 )
 
 MODELO = "rosas-experto"
-ARBOLES = {"1": ("Diagnóstico de Rosas", "DiagnosticoRosas.json"),
-           "2": ("Estructuras de Datos No Lineales", "EstructurasDeDatos.json")}
+ARBOL = "DiagnosticoRosas.json"
 
 
 def preguntar_ia(sistema, prompt, offline):
@@ -22,13 +21,7 @@ def preguntar_ia(sistema, prompt, offline):
 
 
 def explorar():
-    print("Árboles disponibles:")
-    for k, (nombre, _) in ARBOLES.items():
-        print(f"  {k}. {nombre}")
-    op = input("Elige > ").strip()
-    if op not in ARBOLES:
-        op = "1"
-    arbol, error = cargar_arbol(ARBOLES[op][1])
+    arbol, error = cargar_arbol(ARBOL)
     if error:
         print("Error:", error)
         return
